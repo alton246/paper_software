@@ -60,8 +60,8 @@ PNG = '/home/alton/Github/paper_software/2020_ATOMIC_Salinity/figures/'
 hycom_dir1 = '/home/alton/Saildrone/cimh_saildrone/data/Sanola_Hycomm/'
 hycom=xr.open_mfdataset(hycom_dir1+'*nc4',concat_dim='time').isel(depth=0)
 
-files = glob(sat_dir+'saildrone*.nc')
-adcp_files = glob(adcp_dir+'combined*.nc')
+files = glob(sat_dir + 'saildrone*.nc')
+adcp_files = glob(adcp_dir + 'combined*.nc')
 
 
 _, index = np.unique(hycom['time'], return_index=True)
@@ -75,7 +75,7 @@ sd['curr_spd'] = np.sqrt(sd.adcp_vel_east**2 + sd.adcp_vel_north**2)
 sd['wspd']=np.sqrt(sd.UWND_MEAN**2+sd.VWND_MEAN**2)
 # print(files[4])
 # print(files[5])
-print(rss)
+# print(rss)
 #Swap Dimensions
 rss = rss.swap_dims({'ob': 'time'})
 jpl = jpl.swap_dims({'ob': 'time'})
@@ -133,12 +133,12 @@ plt.rcParams['font.weight']='semibold'
 fig = plt.subplots(figsize=(15,15))
 
 # Salinity Plot
-ax = plt.subplot(4,1,1)
+ax = plt.subplot(3,1,1)
 # plt.plot(sal_rbr.time.values, sal_rbr.values,color='b',label='RBR')
 plt.plot(sal_sbe37.time.values, sal_sbe37.values,color='r',label='SBE37')
-plt.plot(ss_times[134:174], rss.smap_SSS.values[134:174],color='c',label='RSS70')
-plt.plot(ss_times[134:174], rss.smap_SSS_40km.values[134:174],color='g',label='RSS40')
-plt.plot(jp_times[96:127], jpl.smap_SSS.values[96:127],color='b',label='JPL')
+plt.scatter(ss_times[134:174], rss.smap_SSS.values[134:174],color='c',label='RSS70')
+plt.scatter(ss_times[134:174], rss.smap_SSS_40km.values[134:174],color='g',label='RSS40')
+plt.scatter(jp_times[96:127], jpl.smap_SSS.values[96:127],color='orange',label='JPL')
 plt.text(sal_sbe37.time.values[1], 34, 'a)', color='k', style='normal',fontsize='15')
 plt.plot(hysal2.time.values, hysal2.values, color='m', label='HYCOM')
 # ax.xaxis.set_major_formatter(d_fmt)
@@ -153,32 +153,34 @@ plt.xticks(fontweight='semibold')
 plt.yticks(fontweight='semibold')
 
 # #SST and Air Temperature Plot
-ax1 = plt.subplot(4,1,2)
-plt.plot(air_temp.time.values, air_temp.values,color='r')
-plt.text(air_temp.time.values[1], 25, 'b)', color='k', style='normal',fontsize='15')
+ax1 = plt.subplot(3,1,2)
+# plt.plot(air_temp.time.values, air_temp.values,color='r')
+# plt.text(air_temp.time.values[1], 25, 'b)', color='k', style='normal',fontsize='15')
+plt.plot(temp_sbe37.time.values, temp_sbe37.values,color='b')
+plt.text(temp_sbe37.time.values[1], 27, 'b)', color='k', style='normal',fontsize='15')
 ax1.xaxis.set_major_formatter(d_fmt)
 # ax1.set_xlabel("Date (mm-dd)", fontsize=15, fontweight='semibold')
-ax1.set_ylabel("Air Temperature", color='r', fontsize=15, fontweight='semibold')
+ax1.set_ylabel("Sea Surface \n Temperature ($^\circ$C)", color='k', fontsize=15, fontweight='semibold')
 plt.tick_params(axis='both', which='major', labelsize=15)
-ax1.tick_params(axis='y', labelcolor='r')
-ax1.set_ylim(min(air_temp.values), max(temp_sbe37.values))
+# ax1.tick_params(axis='y', labelcolor='r')
+# ax1.set_ylim(min(air_temp.values), max(temp_sbe37.values))
 #ax1.set_ylim(26.5, max(temp_sbe37.values))
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
 plt.grid(True, lw=0.5, ls=':')
 plt.xticks(fontweight='semibold')
 plt.yticks(fontweight='semibold')
 
-ax2 = ax1.twinx()
-ax2.set_ylabel("Sea Surface Temperature", color='b', fontsize=15, fontweight='semibold')
-plt.plot(temp_sbe37.time.values, temp_sbe37.values,color='b')
-# plt.text(temp_sbe37.time.values[-1], 25, 'b)', color='k', style='normal',fontsize='15')
-ax2.tick_params(axis='y', labelcolor='b')
-#ax2.set_ylim(min(air_temp.values), max(temp_sbe37.values))
-plt.ylim([26.5, max(temp_sbe37.values)])
-plt.tick_params(axis='both', which='major', labelsize=15)
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-plt.xticks(fontweight='semibold')
-plt.yticks(fontweight='semibold')
+# ax2 = ax1.twinx()
+# ax2.set_ylabel("Sea Surface Temperature", color='b', fontsize=15, fontweight='semibold')
+# plt.plot(temp_sbe37.time.values, temp_sbe37.values,color='b')
+# # plt.text(temp_sbe37.time.values[-1], 25, 'b)', color='k', style='normal',fontsize='15')
+# ax2.tick_params(axis='y', labelcolor='b')
+# #ax2.set_ylim(min(air_temp.values), max(temp_sbe37.values))
+# plt.ylim([26.5, max(temp_sbe37.values)])
+# plt.tick_params(axis='both', which='major', labelsize=15)
+# plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+# plt.xticks(fontweight='semibold')
+# plt.yticks(fontweight='semibold')
 
 # ax3 = ax1.twiny()
 # ax3.set_xticks(dist.values)
@@ -198,48 +200,48 @@ plt.yticks(fontweight='semibold')
 # plt.xticks(fontweight='semibold')
 
 #Wind Speed Vectors
-ax4 = plt.subplot(4,1,3)
-wx = ws.time.values
-wx = wx[::20]
-wy = np.ones(len(wx)) * 8
-dx, dy = u_ws[::30], v_ws[::30]
-m = np.sqrt(np.power(dx, 2) + np.power(dy, 2))
-q = plt.quiver(wx, wy, dx, dy, m/max(m), cmap=cmo.thermal, pivot='tail', width=0.0011)
-plt.text(wx[1], 6, 'c)', color='k', style='normal',fontsize='15')
-ax4.set_ylim(min(ws.values), max(ws.values))
-ax4.xaxis.set_major_formatter(d_fmt)
-ax4.set_ylabel("Wind Speed (m/s)", fontsize=15, fontweight='semibold')
-plt.tick_params(axis='both', which='major', labelsize=15)
-plt.grid(True, lw=0.5, ls=':')
-plt.xticks(fontweight='semibold')
-plt.yticks(fontweight='semibold')
-cbaxes = inset_axes(ax4, width='30%', height='3%', loc='upper right')
-plt.colorbar(cax=cbaxes, ticks=[0.5, 0.6, 0.7, 0.8, 0.9, 1.0], orientation='horizontal')
+# ax4 = plt.subplot(4,1,3)
+# wx = ws.time.values
+# wx = wx[::20]
+# wy = np.ones(len(wx)) * 8
+# dx, dy = u_ws[::30], v_ws[::30]
+# m = np.sqrt(np.power(dx, 2) + np.power(dy, 2))
+# q = plt.quiver(wx, wy, dx, dy, m/max(m), cmap=cmo.thermal, pivot='tail', width=0.0011)
+# plt.text(wx[1], 6, 'c)', color='k', style='normal',fontsize='15')
+# ax4.set_ylim(min(ws.values), max(ws.values))
+# ax4.xaxis.set_major_formatter(d_fmt)
+# ax4.set_ylabel("Wind Speed (m/s)", fontsize=15, fontweight='semibold')
+# plt.tick_params(axis='both', which='major', labelsize=15)
+# plt.grid(True, lw=0.5, ls=':')
+# plt.xticks(fontweight='semibold')
+# plt.yticks(fontweight='semibold')
+# cbaxes = inset_axes(ax4, width='30%', height='3%', loc='upper right')
+# plt.colorbar(cax=cbaxes, ticks=[0.5, 0.6, 0.7, 0.8, 0.9, 1.0], orientation='horizontal')
 
 # al = [np.linspace(min(m/max(m)).values,max(m/max(m)).values,6)]
 # print(al)
 
 #Current Speed Vectors
-ax5 = plt.subplot(4,1,4)
-cx = cs.T[0].time.values
-cx = cx[::20]
-cy = np.ones(len(cx)) * 0.40
-dx, dy = u_cs.T[0][::20], v_cs.T[0][::20]
-m1 = np.sqrt(np.power(dx, 2) + np.power(dy, 2))
-q = plt.quiver(cx, cy, dx, dy, m1/max(m1), cmap=cmo.thermal, pivot='tail', width=0.0011)
-plt.text(cx[1], 0.2, 'd)', color='k', style='normal',fontsize='15')
-ax5.set_ylim(min(cs.T[0].values), max(cs.T[0].values))
-ax5.xaxis.set_major_formatter(d_fmt)
-ax5.set_xlabel("Date (mm-dd)", fontsize=15, fontweight='semibold')
-ax5.set_ylabel("Current Speed (m/s)", fontsize=15, fontweight='semibold')
-plt.tick_params(axis='both', which='major', labelsize=15)
-plt.grid(True, lw=0.5, ls=':')
-plt.xticks(fontweight='semibold')
-plt.yticks(fontweight='semibold')
-cbaxes = inset_axes(ax5, width='30%', height='3%', loc='upper right')
-plt.colorbar(cax=cbaxes, ticks=[0.0, 0.25, 0.50, 0.75, 1.0], orientation='horizontal')
+# ax5 = plt.subplot(3,1,3)
+# cx = cs.T[0].time.values
+# cx = cx[::20]
+# cy = np.ones(len(cx)) * 0.40
+# dx, dy = u_cs.T[0][::20], v_cs.T[0][::20]
+# m1 = np.sqrt(np.power(dx, 2) + np.power(dy, 2))
+# q = plt.quiver(cx, cy, dx, dy, m1/max(m1), cmap=cmo.thermal, pivot='tail', width=0.0011)
+# plt.text(cx[1], 0.2, 'c)', color='k', style='normal',fontsize='15')
+# ax5.set_ylim(min(cs.T[0].values), max(cs.T[0].values))
+# ax5.xaxis.set_major_formatter(d_fmt)
+# ax5.set_xlabel("Date (mm-dd)", fontsize=15, fontweight='semibold')
+# ax5.set_ylabel("Current Speed (m/s)", fontsize=15, fontweight='semibold')
+# plt.tick_params(axis='both', which='major', labelsize=15)
+# plt.grid(True, lw=0.5, ls=':')
+# plt.xticks(fontweight='semibold')
+# plt.yticks(fontweight='semibold')
+# cbaxes = inset_axes(ax5, width='30%', height='3%', loc='upper right')
+# plt.colorbar(cax=cbaxes, ticks=[0.0, 0.25, 0.50, 0.75, 1.0], orientation='horizontal')
 
-ax6 = ax5.twiny()
+ax6 = ax1.twiny()
 ax6.set_xticks(dist.values)
 newlabel = np.linspace(3600,4600,11)
 ax6.set_xticks(newlabel)
